@@ -38,7 +38,7 @@
       self.html5PoolSize = 10;
 
       // Internal properties.
-      self._codecs = {};
+      self._codecs = null;
       self._howls = [];
       self._muted = false;
       self._volume = 1;
