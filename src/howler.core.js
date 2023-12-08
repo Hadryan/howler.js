@@ -265,7 +265,8 @@
       }
 
       var mpegTest = audioTest.canPlayType('audio/mpeg;').replace(/^no$/, '');
-      var hlsTest = audioTest.canPlayType('application/vnd.apple.mpegurl;').replace(/^no$/, '');
+      var hlsTest = audioTest.canPlayType('application/vnd.apple.mpegurl').replace(/^no$/, '');
+      var tsTest = audioTest.canPlayType('video/mp2t').replace(/^no$/, '');
 
       // Opera version <33 has mixed MP3 support, so we need to check for and block it.
       var ua = self._navigator ? self._navigator.userAgent : '';
@@ -279,6 +280,7 @@
         mp3: !!(!isOldOpera && (mpegTest || audioTest.canPlayType('audio/mp3;').replace(/^no$/, ''))),
         m3u: !!hlsTest,
         m3u8: !!hlsTest,
+        ts: !!tsTest,
         mpeg: !!mpegTest,
         opus: !!audioTest.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/, ''),
         ogg: !!audioTest.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, ''),
