@@ -188,10 +188,13 @@
     /**
      * Check for codec support of specific extension.
      * @param  {String} ext Audio file extention.
-     * @return {Boolean}
+     * @return {Boolean|undefined}
      */
     codecs: function(ext) {
-      return (this || Howler)._codecs[ext.replace(/^x-/, '')];
+      var self = this || Howler;
+      if (self._codecs) {
+        return self._codecs[ext.replace(/^x-/, '')];
+      }
     },
 
     /**
@@ -235,7 +238,7 @@
       } catch (e) {}
 
       // Check for supported codecs.
-      if (!self.noAudio) {
+      if (!self.noAudio && !self._codecs) {
         self._setupCodecs();
       }
 
@@ -262,6 +265,7 @@
       }
 
       var mpegTest = audioTest.canPlayType('audio/mpeg;').replace(/^no$/, '');
+      var hlsTest = audioTest.canPlayType('application/vnd.apple.mpegurl;').replace(/^no$/, '');
 
       // Opera version <33 has mixed MP3 support, so we need to check for and block it.
       var ua = self._navigator ? self._navigator.userAgent : '';
@@ -273,6 +277,8 @@
 
       self._codecs = {
         mp3: !!(!isOldOpera && (mpegTest || audioTest.canPlayType('audio/mp3;').replace(/^no$/, ''))),
+        m3u: !!hlsTest,
+        m3u8: !!hlsTest,
         mpeg: !!mpegTest,
         opus: !!audioTest.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/, ''),
         ogg: !!audioTest.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, ''),
